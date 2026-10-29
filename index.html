@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>deafblindness</title>
+  <link rel="preload" href="fonts/PPEiko-Thin.otf" as="font" type="font/otf" crossorigin />
+  <link rel="preload" href="fonts/neuehaasgrotdisp-45light-trial.otf" as="font" type="font/otf" crossorigin />
+  <link rel="preload" href="images/busta_helen.png" as="image" crossorigin />
+  <script>
+    /* Touch devices (phones/tablets) get extra hints + finger interaction.
+       ?touch=1 or #touch forces it, e.g. for the phone preview on a computer. */
+    (function () {
+      try {
+        var forced = window.__HK_FORCE_TOUCH === true || /[?&]touch=1\b/.test(location.search) || location.hash === "#touch";
+        var touch = forced || (window.matchMedia && matchMedia("(hover: none) and (pointer: coarse)").matches);
+        if (touch) document.documentElement.classList.add("is-touch");
+        if (forced) document.documentElement.classList.add("is-touch-forced");
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="no-scroll">
+  <div id="loader" class="loader" aria-live="polite" aria-busy="true">
+    <div class="loader__inner">
+      <div class="loader__grid" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <div class="loader__text" id="loaderText">LOADING</div>
+    </div>
+  </div>
+
+  <div id="micGate" class="mic-gate" aria-label="Microphone permission">
+    <div class="mic-gate__inner">
+      <div class="mic-gate__title">Helen Keller</div>
+      <div class="mic-gate__text">
+        ENABLE YOUR MICROPHONE SO THE VIBRATION<br class="br-d">
+        FIELD CAN REACT TO SOUND.
+      </div>
+      <div class="mic-gate__status" id="micStatus" aria-live="polite"></div>
+      <div class="mic-gate__actions">
+        <button id="micEnableBtn" class="mic-gate__btn" type="button">enable microphone</button>
+        <button id="micSkipBtn" class="mic-gate__btn mic-gate__btn--ghost" type="button">continue without</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="sketchWrap" class="sketch-wrap" aria-hidden="true"></div>
+
+  <div id="chaosWrap" class="chaos-wrap" aria-hidden="true"></div>
+
+  <div id="phospheneWrap" class="phosphene-wrap" aria-hidden="true">
+    <canvas id="phospheneCanvas"></canvas>
+  </div>
+
+  <div id="theoryCurtain" class="theory-curtain" aria-hidden="true"></div>
+
+  <header class="topbar" aria-label="Site header">
+    <div class="topbar__inner">
+      <a href="#top" id="siteTitle" class="topbar__title">deafblindness</a>
+      <a class="topbar__about" href="#theorySection" id="topbarAbout">
+        <span class="topbar__aboutLabel topbar__aboutLabel--dark">about me</span>
+        <span class="topbar__aboutLabel topbar__aboutLabel--light" aria-hidden="true">story of my life</span>
+      </a>
+    </div>
+  </header>
+
+  <section id="top" class="hero">
+    <div class="bust-touch" id="bustTouch" aria-hidden="true"></div>
+    <div class="hero__content">
+      <div class="touch-hint touch-hint--bust" id="bustHint" aria-hidden="true">
+        <span class="touch-hint__text">touch and drag to find her face</span>
+      </div>
+      <h1 class="hero__title">Helen Keller</h1>
+      <p class="hero__subtitle" id="heroSubtitle">
+        A deafblind writer and advocate who turned silence into a kind of brilliance.
+        She learned to connect with the world through touch, determination, and an expansive inner vision.
+      </p>
+    </div>
+  </section>
+
+  <main class="content" id="content">
+
+    <section class="scroll-zone" id="dissolveZone" aria-hidden="true"></section>
+
+    <section class="silence-section" id="silenceSection" aria-label="Silence section">
+      <div class="silence-pin">
+        <div class="silence-stage">
+          <div class="silence-quote" id="silenceQuote1" aria-label="Silence quote 1">
+            <div class="quote-line quote-line--nowrap">
+              <span class="q-eiko">BEFORE WORDS,</span><br class="br-m">
+              <span class="q-haas">THERE WAS</span>
+            </div>
+            <div class="quote-line quote-line--nowrap">
+              <span class="q-haas">ONLY CONFUSION</span><br class="br-m">
+              <span class="q-eiko">AND RAGE.</span>
+            </div>
+          </div>
+          <div class="silence-quote" id="silenceQuote2" aria-label="Silence quote 2">
+            <div class="quote-line quote-line--nowrap">
+              <span class="q-haas">DARKNESS WAS NOT SILENCE.</span>
+            </div>
+            <div class="quote-line quote-line--nowrap">
+              <span class="q-eiko">IT WAS CHAOS.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chaos-section" id="chaosSection" aria-label="Chaos section">
+      <div class="chaos-pin" aria-hidden="true"></div>
+    </section>
+
+    <section class="water-section" id="waterSection" aria-label="Water section">
+      <div class="water-pin">
+        <div class="water-quote" id="waterQuote" aria-label="Water quote">
+          <div class="quote-line quote-line--nowrap">
+            <span class="q-haas">ONE WORD SHATTERED</span>
+          </div>
+          <div class="quote-line quote-line--nowrap">
+            <span class="q-eiko">THE SILENCE OF</span>
+          </div>
+          <div class="quote-line quote-line--nowrap">
+            <span class="q-eiko">NOTHINGNESS.</span><br class="br-m">
+            <span class="q-haas q-water">WATER.</span>
+          </div>
+        </div>
+        <div class="touch-hint touch-hint--water" id="waterHint" aria-hidden="true">
+          <span class="touch-hint__text">tap or drag to feel the water</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="vibe-gap" aria-hidden="true"></section>
+
+    <section class="vibe-section" id="vibeSection" aria-label="Vibration section">
+      <div class="vibe-pin">
+        <div class="vibe-intro" id="vibeIntro" aria-label="Vibration intro">
+          <div class="quote-line quote-line--nowrap">
+            <span class="q-eiko">I DIDN’T</span><br class="br-m">
+            <span class="q-haas" style="margin-left: 28px;">HEAR THE WORLD.</span>
+          </div>
+          <div class="quote-line quote-line--nowrap">
+            <span class="q-haas">I READ IT IN</span><br class="br-m">
+            <span class="q-eiko" style="margin-left: 20px;">VIBRATION</span>
+          </div>
+          <div class="quote-line quote-line--nowrap">
+            <span class="q-haas">AND </span> <span class="q-eiko">PRESSURE.</span>
+          </div>
+        </div>
+        <div class="vibe-caption" id="vibeCaption" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="theory-section" id="theorySection" aria-label="Theory section">
+      <div class="theory-wrap">
+
+        <h2 class="theory-hl theory-hl--1 theory-hl--desk">
+          <span class="theory-hl__row" style="white-space: nowrap;">
+            <span class="t-sans">THE WORLD DID</span> <span class="t-serif">NOT REACH</span>
+          </span>
+          
+          <span class="theory-hl__row" style="white-space: nowrap;">
+            <span class="t-serif">HER&nbsp;THROUGH</span> <span class="t-sans">SOUND&nbsp;OR&nbsp;SIGHT.</span>
+          </span>
+          
+          <span class="theory-hl__row">
+            <span class="t-sans">IT ARRIVED</span> <span class="t-sans">AS</span> <span class="t-sans">PRESSURE.</span>
+          </span>
+          
+          <span class="theory-hl__row">
+            <span class="t-sans">AS RHYTHM,</span> <span class="t-sans">AS A</span> <span class="t-sans">CONTINUOUS</span>
+          </span>
+          
+          <span class="theory-hl__row">
+            <span class="t-sans">FIELD OF</span> <span class="t-serif">VIBRATION</span> <span class="t-serif">MOVING</span>
+          </span>
+          
+          <span class="theory-hl__row">
+             <span class="t-sans">THROUGH</span> <span class="t-sans">SPACE AND BODY.</span>
+          </span>
+          
+        </h2>
+
+        <h2 class="theory-hl theory-hl--1 theory-hl--phone">
+          <span class="theory-hl__line"><span class="t-sans">THE WORLD DID</span></span>
+          <span class="theory-hl__line"><span class="t-serif">NOT REACH HER</span></span>
+          <span class="theory-hl__line"><span class="t-serif">THROUGH</span> <span class="t-sans">SOUND OR</span></span>
+          <span class="theory-hl__line"><span class="t-sans">SIGHT. IT ARRIVED AS</span></span>
+          <span class="theory-hl__line"><span class="t-sans">PRESSURE. AS RHYTHM,</span></span>
+          <span class="theory-hl__line"><span class="t-sans">AS A CONTINUOUS</span></span>
+          <span class="theory-hl__line"><span class="t-sans">FIELD OF</span> <span class="t-serif">VIBRATION</span></span>
+          <span class="theory-hl__line"><span class="t-serif">MOVING</span> <span class="t-sans">THROUGH</span></span>
+          <span class="theory-hl__line"><span class="t-sans">SPACE AND BODY.</span></span>
+        </h2>
+
+        <p class="theory-subhl theory-subhl--1">
+          THROUGH FLOORBOARDS, A DOOR SLAM, FOOTSTEPS, DISTANCE—EVERYTHING BECAME A MOVING PATTERN SHE COULD READ.
+          NOT HEARING, NOT SEEING—YET STILL SENSING: PRESSURE, RHYTHM, IMPACT. IN THAT TACTILE LANGUAGE, “NOISE” TURNED
+          INTO PULSES, AND PULSES TURNED INTO MEANING.
+        </p>
+
+        <div class="theory-body theory-body--1">
+          <p>
+            Helen Keller did not inhabit an empty world. After losing sight and hearing in early childhood, perception did not disappear—it reorganized. What others recognized as sound arrived to her as vibration, timing, and physical force.<br /> 
+            The environment became legible through touch extended into space.
+          </p>
+          <p>
+            Footsteps were not noise, but pulses traveling through the floor. A door closing was not silence, but impact. Human presence announced itself through subtle shifts in air, fabric, and proximity. The world communicated continuously, without words.
+          </p>
+          <p>
+            Over time, these sensations formed patterns. Keller learned to distinguish intensity, rhythm, and repetition—the difference between approach and departure, calm and disturbance. Vibrations ceased to be isolated events<br class="br-d" /> 
+            and became structures of information. Her body functioned as an interpretive surface, translating movement into awareness.
+          </p>
+          <p>
+            This sensory foundation prepared the ground for language. When Anne Sullivan introduced manual signs into Keller’s hand, they did not arrive into a void. They attached themselves to an already organized system of perception. Words did not replace vibration—they anchored it, giving stable reference points to sensations she already understood.
+          </p>
+        </div>
+
+        <div class="theory-block-gap" aria-hidden="true"></div>
+
+        <div class="theory-block-2">
+          <h3 class="theory-hl theory-hl--2 theory-hl--desk">
+            <span class="theory-hl__row">
+              <span class="t-sans">LANGUAGE ENTERED</span>
+            </span>
+            
+            <span class="theory-hl__row">
+              <span class="t-sans">THROUGH</span> <span class="t-serif">THE</span> <span class="t-serif">HAND.</span>
+            </span>
+            
+          </h3>
+
+          <h3 class="theory-hl theory-hl--2 theory-hl--phone">
+            <span class="theory-hl__line"><span class="t-sans">LANGUAGE</span></span>
+            <span class="theory-hl__line"><span class="t-sans">ENTERED THROUGH</span></span>
+            <span class="theory-hl__line"><span class="t-serif">THE HAND.</span></span>
+          </h3>
+
+          <p class="theory-subhl theory-subhl--2">
+            THE MOMENT OF LANGUAGE WAS NOT SUDDEN UNDERSTANDING, BUT CONNECTION. WHEN WORDS WERE TRACED INTO HER PALM, THEY DID NOT DESCRIBE THE WORLD—THEY ATTACHED TO SENSATIONS ALREADY KNOWN. MOVEMENT GAINED REFERENCE. PRESSURE GAINED NAME. REPETITION BECAME STRUCTURE.
+          </p>
+
+          <div class="theory-body theory-body--2">
+            <p>
+              Helen Keller learned spoken language through tactile sign language, reading meaning from motion rather than sound. Anne Sullivan spelled words into her hand, linking physical gestures to objects, actions, and relationships. <br />
+              The famous moment at the water pump did not teach her water—it revealed<br class="br-d" /> that everything had a name.
+            </p>
+            <p>
+              Language, for Keller, was not abstract. It was embodied. Words functioned as anchors, stabilizing a perceptual world already rich with rhythm, pressure, and change. Speech became intelligible not through hearing, but through vibration felt in the throat, jaw, and chest—allowing her to participate in spoken language without ever perceiving sound itself.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="timeline-section" id="timelineSection" aria-label="Timeline section">
+      <div class="timeline-pin">
+        <div class="timeline" id="timeline" aria-label="Timeline">
+          <div class="timeline__stage">
+            <svg class="timeline__ellipse" viewBox="0 0 1000 360" aria-hidden="true">
+              <ellipse cx="500" cy="180" rx="460" ry="150"></ellipse>
+            </svg>
+            <div class="timeline__item t1">
+              <div class="timeline__line" aria-hidden="true"></div>
+              <div class="timeline__label">
+                <div class="timeline__years">1880–1887</div>
+                <div class="timeline__text">Early<br />Childhood<br />&amp; Loss of<br />Senses</div>
+              </div>
+            </div>
+            <div class="timeline__item t2">
+              <div class="timeline__line" aria-hidden="true"></div>
+              <div class="timeline__label">
+                <div class="timeline__years">1887–1900</div>
+                <div class="timeline__text">Breakthrough<br />with<br />Anne Sullivan</div>
+              </div>
+            </div>
+            <div class="timeline__item t3">
+              <div class="timeline__line" aria-hidden="true"></div>
+              <div class="timeline__label">
+                <div class="timeline__years">1900–1920</div>
+                <div class="timeline__text">Education<br />&amp; Writing</div>
+              </div>
+            </div>
+            <div class="timeline__item t4">
+              <div class="timeline__line" aria-hidden="true"></div>
+              <div class="timeline__label">
+                <div class="timeline__years">1920–1968</div>
+                <div class="timeline__text">Advocacy<br />&amp; Global<br />Influence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="periods-section" id="periodsSection" aria-label="Life periods">
+      <div class="periods">
+
+        <div class="period js-period" data-key="p1">
+          <div class="period__bar">
+            <div class="period__year">
+              <span class="t-sans">EARLY CHILDHOOD</span> <span class="t-sans">&amp;</span> <span class="t-serif">LOST SENSES</span>
+            </div>
+          </div>
+          <div class="period__content">
+            <div class="period__title">1880–1887</div>
+            <div class="period__cols">
+              <p>
+                Helen Keller was born in 1880 in Tuscumbia, Alabama, and her earliest months were described as lively and curious. That ordinary beginning matters: she knew light, faces, and the presence of spoken voices before illness redrew the map.<br /> 
+                The contrast between “before” and “after” becomes the emotional<br class="br-d" /> 
+                foundation of this period.
+              </p>
+              <p>
+                At nineteen months she became severely ill—often historically associated with scarlet fever or meningitis—and after she recovered, both hearing and sight were gone. What followed was not calm darkness, but a world without stable structure: touch, temperature, movement, and impulse without a consistent system for meaning.
+              </p>
+              <p>
+                In the absence of language, emotions could surge faster than understanding. She improvised basic gestures at home, learned routines through repetition, and communicated needs physically—yet the gap remained: she could not reliably name, ask<br class="br-d" /> or reflect. These early years were not “silence,” but confusion—experience without form.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="period js-period" data-key="p2">
+          <div class="period__bar">
+            <div class="period__year">
+              <span class="t-sans">MEETING</span> <span class="t-serif">ANNE SULLIVAN</span>
+            </div>
+          </div>
+          <div class="period__content">
+            <div class="period__title">1887–1900</div>
+            <div class="period__cols">
+              <p>
+                In 1887 Anne Sullivan arrived as a young teacher trained at<br class="br-d" /> the Perkins School for the Blind, bringing a method built on consistency and tactile clarity. She began with finger-spelling into Helen’s palm—repeating patterns until gesture and object could be linked reliably, not as a game, but as a system.
+              </p>
+              <p>
+                The breakthrough is associated with the water-pump lesson: cool water running over one hand while “w-a-t-e-r” was spelled into the other. The shift was not simply learning a label; it was recognizing that the world could be organized through names—that sensation and meaning could belong to the same concept.
+              </p>
+              <p>
+                Learning quickly expanded beyond vocabulary. Sullivan taught through daily life—walks, household tasks, and tactile exploration—building grammar, memory, and abstraction. Across the 1890s, Keller learned braille and writing, pursued speech training through vibration and muscle movement, and moved from immediate reaction toward structured thought.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="period js-period" data-key="p3">
+          <div class="period__bar">
+            <div class="period__year">
+              <span class="t-sans">EDUCATION</span> <span class="t-sans">&amp;</span> <span class="t-serif">WRITING</span>
+            </div>
+          </div>
+          <div class="period__content">
+            <div class="period__title">1900–1920</div>
+            <div class="period__cols">
+              <p>
+                At the turn of the century, Keller pursued formal education in environments not designed for deafblind access. Study required constant translation—texts into braille, lectures into hand spelling, and intensive preparation to keep pace with academic expectations built for hearing and sight.
+              </p>
+              <p>
+                She graduated from Radcliffe College in 1904 with a Bachelor<br class="br-d" /> 
+                of Arts degree, becoming the first deafblind person known to achieve this milestone. The achievement mattered as infrastructure as much as intellect: it demonstrated what becomes possible when access is treated as design,<br class="br-d" /> 
+                not exception.
+              </p>
+              <p>
+                During this period she published widely, including <em>The Story of My Life</em> (1903), translating embodied perception into narrative form. Her writing moves between intimate memory and public argument—showing how language enters through the body and becomes a tool for independent thought, interpretation,<br class="br-d" /> 
+                and cultural presence.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="period js-period" data-key="p4">
+          <div class="period__bar">
+            <div class="period__year">
+              <span class="t-serif">ADVOCACY</span>&nbsp;<span class="t-sans">&amp;</span>&nbsp;<br class="br-t"><span class="t-sans" style="white-space: nowrap;">GLOBAL&nbsp;INFLUENCE</span>
+            </div>
+          </div>
+          <div class="period__content">
+            <div class="period__title">1920–1968</div>
+            <div class="period__cols">
+              <p>
+                From the 1920s onward, Keller became an international advocate for disability rights, education access, and social reform. She lectured widely and argued that disability is not only personal, but political—shaped by poverty, working conditions, and whether society provides tools for participation.
+              </p>
+              <p>
+                Her public work helped shift perception away from charity toward rights and accommodation. She emphasized literacy, education systems, and practical supports as the foundations that allow talent to appear. She also supported broader movements of her time, including women’s suffrage and labor reforms, linking disability to the larger social structure.
+              </p>
+              <p>
+                Across decades her influence became global: not only through speeches and media visibility, but through the model she embodied—deafblindness as a different mode of perception requiring access and respect. By her death in 1968, her life<br class="br-d" /> 
+                had become both historical record and argument for<br class="br-d" /> 
+                inclusive design.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="links-section" id="linksSection" aria-label="Links section">
+      <div class="links-wrap">
+        <h2 class="links-hl">
+          <span class="links-hl__row">
+            <span class="t-sans">IF YOU WANT TO GO DEEPER</span>
+          </span>
+          
+          <span class="links-hl__row">
+            <span class="t-sans">INTO HER</span> <span class="t-serif">STORY</span> <span class="t-sans">FROM DIFFERENT ANGLES</span>
+          </span>
+          
+        </h2>
+        <p class="links-subhl">
+          These sources extend the experience beyond this page—her own words in full, documentary context,<br class="br-d" /> 
+          and a more detailed view of how her life was recorded, interpreted, and understood.
+        </p>
+        <div class="links-grid" aria-label="External links">
+          <a class="links-btn" href="https://dn721604.ca.archive.org/0/items/storyofmylife00hele/storyofmylife00hele.pdf" target="_blank" rel="noopener noreferrer">
+            the story of my life — book
+          </a>
+          <a class="links-btn" href="https://www.youtube.com/watch?v=0QODz_xciKY" target="_blank" rel="noopener noreferrer">
+            documentary — in her story pt. 1
+          </a>
+          <a class="links-btn" href="https://en.wikipedia.org/wiki/Helen_Keller" target="_blank" rel="noopener noreferrer">
+            wikipedia
+          </a>
+          <a class="links-btn" href="https://www.youtube.com/watch?v=KJlmHBL5oUY" target="_blank" rel="noopener noreferrer">
+            documentary — in her story pt. 2
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="colophon" aria-label="Colophon">
+      TEXT BASED ON <span class="colophon__serif">THE STORY OF MY LIFE</span> BY HELEN KELLER AND
+      HISTORICAL ACCOUNTS OF DEAFBLIND EDUCATION.<br /><br />
+      WEBSITE CREATED BY ANNA MIŘÁTSKÁ — SEMESTER PROJECT,<br />
+      FACULTY OF ART AND DESIGN, JAN EVANGELISTA PURKYNĚ UNIVERSITY IN ÚSTÍ NAD LABEM, 2025.
+    </footer>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/addons/p5.sound.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
